@@ -43,4 +43,32 @@ public class QuizService {
 
         
     }
+
+    public ResponseEntity<String> deleteQuiz(int id) {
+        if(quizDao.existsById(id)){
+            try{
+                quizDao.deleteById(id);
+                return new ResponseEntity<>("Quiz " + id + " deleted successfully!", HttpStatus.OK);
+            } catch (Exception e){
+                e.printStackTrace();
+                return new ResponseEntity<>("Failed to delete quiz!", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } else {
+            return new ResponseEntity<>("Quiz with ID " + id + " not found!", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    public ResponseEntity<Quiz> getQuizById(int id) {
+        return quizDao.findById(id)
+                .map(quiz -> new ResponseEntity<>(quiz, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    public ResponseEntity<List<Quiz>> getAllQuiz() {
+        try{
+            return new ResponseEntity<>(quizDao.findAll(), HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
