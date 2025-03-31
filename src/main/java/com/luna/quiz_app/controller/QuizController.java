@@ -1,5 +1,7 @@
 package com.luna.quiz_app.controller;
 
+import com.luna.quiz_app.model.Question;
+import com.luna.quiz_app.model.QuestionWrapper;
 import com.luna.quiz_app.model.Quiz;
 import com.luna.quiz_app.service.QuizService;
 
@@ -27,6 +29,11 @@ public class QuizController {
     @GetMapping("{id}")
     public ResponseEntity<Quiz> getQuizById(@PathVariable int id){
         return quizService.getQuizById(id);
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(@PathVariable int id){
+        return quizService.getQuizQuestions(id);
     }
 
     @PostMapping("create")

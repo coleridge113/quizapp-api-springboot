@@ -3,9 +3,15 @@ package com.luna.quiz_app.service;
 import com.luna.quiz_app.dao.QuestionDao;
 import com.luna.quiz_app.dao.QuizDao;
 import com.luna.quiz_app.model.Question;
+import com.luna.quiz_app.model.QuestionWrapper;
 import com.luna.quiz_app.model.Quiz;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -70,5 +76,27 @@ public class QuizService {
         } catch (Exception e){
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public ResponseEntity<List<QuestionWrapper>> getQuizQuestions(int id) {
+        Optional<Quiz> quiz = quizDao.findById(id);
+
+        if(quiz.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        List<QuestionWrapper> questionsForUser = quiz.get().getQuestions().stream()
+            .map(q -> new QuestionWrapper(
+                    q.getId(),
+                    q.getQuestionTitle(),
+                    q.getOption1(),
+                    q.getOption2(),
+                    q.getOption3(),
+                    q.getOption4()
+            ))
+            .collect(Collectors.toCollection(ArrayList::new));
+
+        Collections.shuffle(questionsForUser);
+        return new ResponseEntity<>(questionsForUser, HttpStatus.OK);
     }
 }
