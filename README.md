@@ -20,19 +20,18 @@ The **Quiz App** is a web application built using **Spring Boot** that allows us
 
 The application provides the following RESTful API endpoints:
 
-- `GET /api/quizzes`: Retrieve all quizzes.
-- `POST /api/quizzes`: Create a new quiz.
-- `PUT /api/quizzes/{id}`: Update an existing quiz.
-- `DELETE /api/quizzes/{id}`: Delete a quiz.
-- `GET /api/quizzes/{id}/questions`: Retrieve questions for a specific quiz.
+Quiz APIs:
+- `GET /quiz/getAllQuiz`: Retrieve all existing quizzes.
+- `GET /quiz/{id}`: Retrieve a specific quiz.
+- `GET /quiz/getQuestions/{id}`: Retrieve the questions of a specific quiz.
+- `POST /quiz/create?category={category}&numQ={numQ}&title={title}`: Create a new quiz based on category, number of questions, and title.
+- `POST /quiz/submit/{id}`: Submit answers based on Quiz ID.
+- `DELETE /quiz/{id}`: Delete a quiz.
 
-## Getting Started
-
-1. Clone the repository.
-2. Build the project using Maven or Gradle.
-3. Run the application using the Spring Boot starter.
-4. Access the API or integrate it with a frontend.
-
-## License
-
-This project is licensed under the MIT License.
+Questions APIs:
+- `GET /questions/allQuestions`: Retrieve all existing questions.
+- `GET /questions/{id}`: Retrieve a specific question by its ID.
+- `GET /questions/category/{category}`: Retrieve all questions in a specific category.
+- `POST /questions/add`: Add a new question (requires a `Question` object in the request body).
+- `POST /questions/update/{id}`: Update an existing question by its ID (requires a `Question` object in the request body).
+- `DELETE /questions/delete/{id}`: Delete a specific question by its ID.
