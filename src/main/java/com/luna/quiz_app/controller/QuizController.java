@@ -1,16 +1,14 @@
 package com.luna.quiz_app.controller;
 
-import com.luna.quiz_app.model.Question;
 import com.luna.quiz_app.model.QuestionWrapper;
 import com.luna.quiz_app.model.Quiz;
+import com.luna.quiz_app.model.Response;
 import com.luna.quiz_app.service.QuizService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import java.util.List;
 
 
@@ -44,6 +42,11 @@ public class QuizController {
     @DeleteMapping("delete/{id}")
     public ResponseEntity<String> deleteQuiz(@PathVariable int id){
         return quizService.deleteQuiz(id);
+    }
+
+    @PostMapping("submit/{id}")
+    public ResponseEntity<Integer> submitQuiz(@PathVariable Integer id, @RequestBody List<Response> responses){
+        return quizService.calculateResult(id, responses);
     }
     
 }

@@ -5,13 +5,13 @@ import com.luna.quiz_app.dao.QuizDao;
 import com.luna.quiz_app.model.Question;
 import com.luna.quiz_app.model.QuestionWrapper;
 import com.luna.quiz_app.model.Quiz;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import com.luna.quiz_app.model.Response;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -98,5 +98,28 @@ public class QuizService {
 
         Collections.shuffle(questionsForUser);
         return new ResponseEntity<>(questionsForUser, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Integer> calculateResult(Integer id, List<Response> responses) {
+        Optional<Quiz> quiz = quizDao.findById(id);
+        if (quiz.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    
+        List<Question> questions = quiz.get().getQuestions();
+    
+        Map<Integer, Question> questionMap = questions.stream()
+                .collect(Collectors.toMap(Question::getId, question -> question));
+    
+        int correctAnswers = 0;
+    
+        for (Response response : responses) {
+            Question question = questionMap.get(response.getId()); 
+            if (question != null && response.getAnswer().equals(question.getRightAnswer())) {
+                correctAnswers++;
+            }
+        }
+    
+        return new ResponseEntity<>(correctAnswers, HttpStatus.OK);
     }
 }
